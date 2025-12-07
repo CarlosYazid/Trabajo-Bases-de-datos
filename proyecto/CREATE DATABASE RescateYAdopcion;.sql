@@ -1,97 +1,88 @@
--- Creación de tablas de Usuarios
+CREATE DATABASE RescateYAdopcion;
+USE RescateYAdopcion;
 
+-- Creación de tablas de Usuarios
 CREATE TABLE Usuario (
-    cedula_ciudadania NUMERIC(10),
+    cedula_ciudadania NUMERIC(10) PRIMARY KEY,
     nombre VARCHAR(50) NOT NULL,
     apellido VARCHAR(50) NOT NULL,
     telefono VARCHAR(20) NOT NULL,
     correo VARCHAR(100),
-    tipo VARCHAR(30) CHECK (tipo IN ('Adoptante', 'Acogedor', 'Veterinario')) NOT NULL,
-    PRIMARY KEY (cedula_ciudadania,tipo)
-) ENGINE = InnoDB;
+    tipo VARCHAR(30) CHECK (tipo IN ('Adoptante', 'Acogedor', 'Veterinario')) NOT NULL
+);
 
 CREATE TABLE Adoptante (
-    cedula_ciudadania NUMERIC(10),
+    cedula_ciudadania NUMERIC(10) PRIMARY KEY,
     profesion VARCHAR(100),
     fuente_ingresos VARCHAR(100) NOT NULL,
     direccion VARCHAR(100) NOT NULL,
     tipo VARCHAR(30) DEFAULT 'Adoptante' CHECK (tipo = 'Adoptante'),
-    UNIQUE (cedula_ciudadania),
-    PRIMARY KEY (cedula_ciudadania,tipo),
+
     FOREIGN KEY (cedula_ciudadania,tipo) REFERENCES Usuario(cedula_ciudadania,tipo)
-) ENGINE = InnoDB;
+);
 
 CREATE TABLE Acogedor (
-    cedula_ciudadania NUMERIC(10),
+    cedula_ciudadania NUMERIC(10) PRIMARY KEY,
     direccion VARCHAR(100) NOT NULL,
     fuente_ingresos VARCHAR(100) NOT NULL,
     tipo VARCHAR(30) DEFAULT 'Acogedor' CHECK (tipo = 'Acogedor'),
-    UNIQUE(cedula_ciudadania),
-    PRIMARY KEY (cedula_ciudadania,tipo),
+
     FOREIGN KEY (cedula_ciudadania,tipo) REFERENCES Usuario(cedula_ciudadania,tipo)
-) ENGINE = InnoDB;
+);
 
 CREATE TABLE Veterinario (
-    cedula_ciudadania NUMERIC(10),
+    cedula_ciudadania NUMERIC(10) PRIMARY KEY,
     especializacion VARCHAR(100) NOT NULL,
     tipo VARCHAR(30) DEFAULT 'Veterinario' CHECK (tipo = 'Veterinario'),
-    UNIQUE (cedula_ciudadania),
-    PRIMARY KEY (cedula_ciudadania,tipo),
+
     FOREIGN KEY (cedula_ciudadania,tipo) REFERENCES Usuario(cedula_ciudadania,tipo)
-) ENGINE = InnoDB;
+);
 
 
 -- Creación de tabla de Refugios
 
 CREATE TABLE Refugio (
-  codigo NUMERIC(4),
+  codigo NUMERIC(4) PRIMARY KEY,
   nombre VARCHAR(50) NOT NULL,
   direccion VARCHAR(100) NOT NULL,
-  ciudad VARCHAR(50) NOT NULL,
-  UNIQUE(codigo),
-  PRIMARY KEY(codigo)
-) ENGINE = InnoDB;
+  ciudad VARCHAR(50) NOT NULL
+);
 
 
 -- Creación de tablas de Mascotas y relacionados
 
 
 CREATE TABLE Mascota (
-    codigo NUMERIC(5),
+    codigo NUMERIC(5) PRIMARY KEY,
     nombre VARCHAR(50) NOT NULL,
     tipo VARCHAR(20) CHECK (tipo IN ('Perro','Gato')) NOT NULL,
     edad NUMERIC(2) NOT NULL,
     sexo VARCHAR(20) NOT NULL,
     descripcion TEXT NOT NULL,
-    hijo_de NUMERIC(5),            -- Mascota padre/madre
-    refugio NUMERIC(4),    -- ID refugio
-    acogedor NUMERIC(10),           -- Cedula de acogedor
-    veterinario NUMERIC(10) NOT NULL,
+    hijo_de NUMERIC(5) NULL,            -- Mascota padre/madre
+    refugio NUMERIC(4) NULL,    -- ID refugio
+    acogedor NUMERIC(10) NULL,           -- Cedula de acogedor
 
-    PRIMARY KEY (codigo,tipo),
-    UNIQUE (codigo),
-    UNIQUE (codigo,veterinario),
     FOREIGN KEY (hijo_de) REFERENCES Mascota(codigo),
     FOREIGN KEY (acogedor) REFERENCES Acogedor(cedula_ciudadania),
-    FOREIGN KEY (refugio) REFERENCES Refugio(codigo),
-    FOREIGN KEY (veterinario) REFERENCES veterinario(cedula_ciudadania)
-) ENGINE = InnoDB;
+    FOREIGN KEY (refugio) REFERENCES Refugio(codigo)
+);
 
 CREATE TABLE Perro (
-    codigo_mascota NUMERIC(5),
+    codigo_mascota NUMERIC(5) PRIMARY KEY,
     cantidad_comida NUMERIC(4) NOT NULL,
     tipo VARCHAR(20) DEFAULT 'Perro' CHECK (tipo = 'Perro'),
-    PRIMARY KEY(codigo_mascota,tipo),
+
     FOREIGN KEY (codigo_mascota,tipo) REFERENCES Mascota(codigo,tipo)
-) ENGINE = InnoDB;
+);
 
 CREATE TABLE Gato (
-    codigo_mascota NUMERIC(5),
+    codigo_mascota NUMERIC(5) PRIMARY KEY,
     fertilidad BOOLEAN NOT NULL,
     tipo VARCHAR(20) DEFAULT 'Gato' CHECK (tipo = 'Gato'),
-    PRIMARY KEY (codigo_mascota,tipo),
+
     FOREIGN KEY (codigo_mascota,tipo) REFERENCES Mascota(codigo,tipo)
-) ENGINE = InnoDB;
+);
 
 CREATE TABLE Revision (
   codigo NUMERIC(7) PRIMARY KEY,
@@ -102,47 +93,46 @@ CREATE TABLE Revision (
 
   FOREIGN KEY (veterinario) REFERENCES Veterinario(cedula_ciudadania),
   FOREIGN KEY (codigo_mascota) REFERENCES Mascota(codigo)
-) ENGINE = InnoDB;
+);
 
 CREATE TABLE Estado_Salud (
     fecha DATE NOT NULL,
     diagnostico VARCHAR(200) NOT NULL,
-    codigo_mascota NUMERIC(5),    -- CP / también CF hacia Mascota
+    codigo_mascota NUMERIC(5) PRIMARY KEY,    -- CP / también CF hacia Mascota
     tipo VARCHAR(6),
 
-    PRIMARY KEY(codigo_mascota,tipo),
     FOREIGN KEY (codigo_mascota) REFERENCES Mascota(codigo)
-) ENGINE = InnoDB;
+);
 
 CREATE TABLE Optimo_Para_Adopcion (
-    codigo_mascota NUMERIC(5),
+    codigo_mascota NUMERIC(5) PRIMARY KEY,
     observaciones TEXT NOT NULL,
     tipo VARCHAR(6) DEFAULT 'Optimo' CHECK (tipo = 'Optimo'),
-    PRIMARY KEY (codigo_mascota, tipo),
+
     FOREIGN KEY (codigo_mascota,tipo) REFERENCES Estado_Salud(codigo_mascota,tipo)
-) ENGINE = InnoDB;
+);
 
 -- Creación de tabla de Solicitudes de Adopción
 
 CREATE TABLE Solicitud_Adopcion (
-    codigo VARCHAR(20),
+    codigo VARCHAR(20) PRIMARY KEY,
     fecha DATE NOT NULL,
     motivo VARCHAR(200) NULL,
     codigo_mascota NUMERIC(5) NOT NULL,
     cedula_adoptante NUMERIC(10),
     tipo VARCHAR(30) NOT NULL CHECK(tipo IN ("Aprobada", "Rechazada")),  -- Aprobada / Rechazada / Pendiente
-    PRIMARY KEY (codigo,tipo),
+
     FOREIGN KEY (codigo_mascota) REFERENCES Mascota(codigo),
     FOREIGN KEY (cedula_adoptante) REFERENCES Adoptante(cedula_ciudadania)
-) ENGINE = InnoDB;
+);
 
 CREATE TABLE Aprobada (
     codigo_solicitud VARCHAR(20) PRIMARY KEY,
     recomendaciones TEXT NOT NULL,
     tipo VARCHAR(30) DEFAULT 'Aprobada' CHECK (tipo = 'Aprobada'),
-    UNIQUE (codigo_solicitud),
+
     FOREIGN KEY (codigo_solicitud,tipo) REFERENCES Solicitud_Adopcion(codigo,tipo)
-) ENGINE = InnoDB;
+);
 
 CREATE TABLE Rechazada (
     codigo_solicitud VARCHAR(20) PRIMARY KEY,
@@ -150,7 +140,7 @@ CREATE TABLE Rechazada (
     tipo VARCHAR(30) DEFAULT 'Rechazada' CHECK (tipo = 'Rechazada'),
 
     FOREIGN KEY (codigo_solicitud,tipo) REFERENCES Solicitud_Adopcion(codigo,tipo)
-) ENGINE = InnoDB;
+);
 
 CREATE TABLE Adopcion (
     codigo_solicitud VARCHAR(20) PRIMARY KEY,
@@ -158,7 +148,7 @@ CREATE TABLE Adopcion (
     observaciones TEXT NOT NULL,
 
     FOREIGN KEY (codigo_solicitud) REFERENCES Aprobada(codigo_solicitud)
-) ENGINE = InnoDB;
+);
 
 
 CREATE TABLE Devolucion (
@@ -170,16 +160,16 @@ CREATE TABLE Devolucion (
     FOREIGN KEY (mascota) REFERENCES Mascota(codigo),
     FOREIGN KEY (adoptante) REFERENCES Adoptante(cedula_ciudadania),
     PRIMARY KEY (mascota, fecha)
-) ENGINE = InnoDB;
+);
 
 -- Caso Especial: Creación de Inyección Antiparasitaria
 
 CREATE TABLE Inyeccion_Antiparasitaria (
-    fecha_estimada DATE NOT NULL,
     fecha_real DATE NOT NULL,
+    fecha_estimada DATE NOT NULL,
     resultado VARCHAR(100) NOT NULL,
     codigo_mascota NUMERIC(5) NOT NULL,
-    veterinario NUMERIC(10) NOT NULL,
-    FOREIGN KEY (codigo_mascota,veterinario) REFERENCES Mascota(codigo,veterinario),
+
+    FOREIGN KEY (codigo_mascota) REFERENCES Mascota(codigo),
     PRIMARY KEY (fecha_real, codigo_mascota)
-) ENGINE = InnoDB;
+);

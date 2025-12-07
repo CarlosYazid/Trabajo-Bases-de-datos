@@ -7,6 +7,6 @@ require('../config/conexion.php');
 $query = "SELECT * FROM mascota";
 
 // Ejecutar la consulta
-$resultadoEmpresa = mysqli_query($conn, $query) or die(mysqli_error($conn));
+$resultadoMascota = mysqli_query($conn, $query) or die(mysqli_error($conn));
 
 mysqli_close($conn);
