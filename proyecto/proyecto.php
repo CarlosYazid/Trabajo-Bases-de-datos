@@ -55,6 +55,35 @@ include "../includes/header.php";
             </select>
         </div>
 
+        <div class="mb-3">
+            <label for="veterinario" class="form-label">Veterinario</label>
+            <select name="veterinario" id="veterinario" class="form-select">
+                
+                <!-- Option por defecto -->
+                <option value="" selected disabled hidden></option>
+
+                <?php
+                // Importar el código del otro archivo
+                require("veterinario_select.php");
+                
+                // Verificar si llegan datos
+                if($resultadoVeterinario):
+                    
+                    // Iterar sobre los registros que llegaron
+                    foreach ($resultadoVeterinario as $fila):
+                ?>
+
+                <!-- Opción que se genera -->
+                <option value="<?= $fila["cedula_ciudadania"]; ?>"><?= $fila["nombre"]; ?> - C.C. <?= $fila["cedula_ciudadania"]; ?></option>
+
+                <?php
+                        // Cerrar los estructuras de control
+                    endforeach;
+                endif;
+                ?>
+            </select>
+        </div>
+
         <button type="submit" class="btn btn-primary">Agregar</button>
 
     </form>

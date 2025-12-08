@@ -37,7 +37,7 @@ include "../includes/header.php";
 
         <div class="mb-3">
             <label for="especialidad" class="form-label">Especialidad</label>
-            <input type="text" class="form-control" id="especialidad" name="especialidad">
+            <input type="text" class="form-control" id="especialidad" name="especialidad" required>
         </div>
 
         <button type="submit" class="btn btn-primary">Agregar</button>

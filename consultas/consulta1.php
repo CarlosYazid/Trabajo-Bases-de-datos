@@ -7,20 +7,15 @@ include "../includes/header.php";
 
 <p class="mt-3 fw-bold">Caso general:</p>
 <p class="mt-3">
-    Sea sumavalor la suma de los valores de todos los proyectos asociados con un cliente.
-    El primer botón debe mostrar la cédula y el nombre de cada uno de los clientes 
-    que cumple todas las siguientes condiciones: es gerente, tiene sumavalor > 1000,
-    ha revisado al menos 3 proyectos y la empresa que gerencia no ha revisado ni un
-    solo proyecto.
+    Mostrar todos los datos del empleado(a) que más inseminaciones ha hecho a
+    vacas que él/ella no cuida (en caso de empates, usted decide como proceder).
 </p>
 
 <p class="mt-3 fw-bold">Caso particular:</p>
 <p class="mt-3">
-    Sea sumavalor la suma de los valores de todos los proyectos asociados con un cliente.
-    El primer botón debe mostrar la cédula y el nombre de cada uno de los clientes 
-    que cumple todas las siguientes condiciones: es gerente, tiene sumavalor > 1000,
-    ha revisado al menos 3 proyectos y la empresa que gerencia no ha revisado ni un
-    solo proyecto.
+    Mostrar todos los datos del veterinario/a que mas inyecciones antiparasitarias
+    ha realizado a perros que no fueron asignados a él/ella para revisiones médicas
+    periódicas.
 </p>
 
 <?php

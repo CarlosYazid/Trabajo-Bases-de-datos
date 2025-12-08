@@ -28,6 +28,39 @@ include "../includes/header.php";
             </select>
         </div>
 
+
+        <div id="extraCampo">
+        <script>
+            const tipoSelect = document.getElementById("tipo");
+            const extraDiv = document.getElementById("extraCampo");
+
+            function actualizarCampo() {
+                extraDiv.innerHTML = "";
+
+                if (tipoSelect.value === "Perro") {
+                    extraDiv.innerHTML = `<div class="mb-3">
+                                            <label for="cantComida" class="form-label">Cantidad de Comida Diaria (gr)</label>
+                                            <input type="number" class="form-control" id="cantComida" name="cantComida" required>
+                                            </div>`;
+                } else if (tipoSelect.value === "Gato") {
+                    extraDiv.innerHTML = `<div class="mb-3">
+                                            <label for="fertilidad" class="form-label">Fertilidad</label>
+                                            <select class="form-select" id="fertilidad" name="fertilidad" required>
+                                                <option value=TRUE selected>TRUE</option>
+                                                <option value=FALSE>FALSE</option>
+                                            </select>
+                                            </div>`;
+                }
+            }
+
+            // para ejecutar al cambiar de opcion
+            tipoSelect.addEventListener("change", actualizarCampo);
+
+            actualizarCampo();
+        </script>
+        </div>
+
+
         <div class="mb-3">
             <label for="edad" class="form-label">Edad</label>
             <input type="number" class="form-control" id="edad" name="edad" min="0" max = "30" required>
@@ -222,7 +255,7 @@ if($resultadoEmpresa and $resultadoEmpresa->num_rows > 0):
                 <!-- Botón de eliminar. Debe de incluir la CP de la entidad para identificarla -->
                 <td class="text-center">
                     <form action="empresa_delete.php" method="post">
-                        <input hidden type="text" name="codigoEliminar" value="<?= $fila["codigo"]; ?>">
+                        <input hidden type="number" name="codigoEliminar" value="<?= $fila["codigo"]; ?>">
                         <button type="submit" class="btn btn-danger">Eliminar</button>
                     </form>
                 </td>

@@ -1,55 +1,40 @@
 -- Creación de tablas de Usuarios
 
 CREATE TABLE Usuario (
-    cedula_ciudadania NUMERIC(10),
+    cedula_ciudadania NUMERIC(10) PRIMARY KEY,
     nombre VARCHAR(50) NOT NULL,
     apellido VARCHAR(50) NOT NULL,
     telefono VARCHAR(20) NOT NULL,
     correo VARCHAR(100),
-    tipo VARCHAR(30) CHECK (tipo IN ('Adoptante', 'Acogedor', 'Veterinario')) NOT NULL,
-    PRIMARY KEY (cedula_ciudadania,tipo)
+    tipo VARCHAR(30) CHECK (tipo IN ('adoptante', 'acogedor', 'veterinario')) NOT NULL
 ) ENGINE = InnoDB;
 
 CREATE TABLE Adoptante (
-    cedula_ciudadania NUMERIC(10),
+    cedula_ciudadania NUMERIC(10) PRIMARY KEY REFERENCES Usuario,
     profesion VARCHAR(100),
     fuente_ingresos VARCHAR(100) NOT NULL,
-    direccion VARCHAR(100) NOT NULL,
-    tipo VARCHAR(30) DEFAULT 'Adoptante' CHECK (tipo = 'Adoptante'),
-    UNIQUE (cedula_ciudadania),
-    PRIMARY KEY (cedula_ciudadania,tipo),
-    FOREIGN KEY (cedula_ciudadania,tipo) REFERENCES Usuario(cedula_ciudadania,tipo)
+    direccion VARCHAR(100) NOT NULL
 ) ENGINE = InnoDB;
 
 CREATE TABLE Acogedor (
-    cedula_ciudadania NUMERIC(10),
+    cedula_ciudadania NUMERIC(10) PRIMARY KEY REFERENCES Usuario,
     direccion VARCHAR(100) NOT NULL,
-    fuente_ingresos VARCHAR(100) NOT NULL,
-    tipo VARCHAR(30) DEFAULT 'Acogedor' CHECK (tipo = 'Acogedor'),
-    UNIQUE(cedula_ciudadania),
-    PRIMARY KEY (cedula_ciudadania,tipo),
-    FOREIGN KEY (cedula_ciudadania,tipo) REFERENCES Usuario(cedula_ciudadania,tipo)
+    fuente_ingresos VARCHAR(100) NOT NULL
 ) ENGINE = InnoDB;
 
 CREATE TABLE Veterinario (
-    cedula_ciudadania NUMERIC(10),
-    especializacion VARCHAR(100) NOT NULL,
-    tipo VARCHAR(30) DEFAULT 'Veterinario' CHECK (tipo = 'Veterinario'),
-    UNIQUE (cedula_ciudadania),
-    PRIMARY KEY (cedula_ciudadania,tipo),
-    FOREIGN KEY (cedula_ciudadania,tipo) REFERENCES Usuario(cedula_ciudadania,tipo)
+    cedula_ciudadania NUMERIC(10) PRIMARY KEY REFERENCES Usuario,
+    especializacion VARCHAR(100) NOT NULL
 ) ENGINE = InnoDB;
 
 
 -- Creación de tabla de Refugios
 
 CREATE TABLE Refugio (
-  codigo NUMERIC(4),
+  codigo NUMERIC(4) PRIMARY KEY,
   nombre VARCHAR(50) NOT NULL,
   direccion VARCHAR(100) NOT NULL,
-  ciudad VARCHAR(50) NOT NULL,
-  UNIQUE(codigo),
-  PRIMARY KEY(codigo)
+  ciudad VARCHAR(50) NOT NULL
 ) ENGINE = InnoDB;
 
 
@@ -57,40 +42,31 @@ CREATE TABLE Refugio (
 
 
 CREATE TABLE Mascota (
-    codigo NUMERIC(5),
+    codigo NUMERIC(5) PRIMARY KEY,
     nombre VARCHAR(50) NOT NULL,
     tipo VARCHAR(20) CHECK (tipo IN ('Perro','Gato')) NOT NULL,
     edad NUMERIC(2) NOT NULL,
     sexo VARCHAR(20) NOT NULL,
     descripcion TEXT NOT NULL,
-    hijo_de NUMERIC(5),            -- Mascota padre/madre
-    refugio NUMERIC(4),    -- ID refugio
-    acogedor NUMERIC(10),           -- Cedula de acogedor
+    hijo_de NUMERIC(5),
+    refugio NUMERIC(4),
+    acogedor NUMERIC(10),
     veterinario NUMERIC(10) NOT NULL,
 
-    PRIMARY KEY (codigo,tipo),
-    UNIQUE (codigo),
-    UNIQUE (codigo,veterinario),
     FOREIGN KEY (hijo_de) REFERENCES Mascota(codigo),
     FOREIGN KEY (acogedor) REFERENCES Acogedor(cedula_ciudadania),
     FOREIGN KEY (refugio) REFERENCES Refugio(codigo),
-    FOREIGN KEY (veterinario) REFERENCES veterinario(cedula_ciudadania)
+    FOREIGN KEY (veterinario) REFERENCES Veterinario(cedula_ciudadania)
 ) ENGINE = InnoDB;
 
 CREATE TABLE Perro (
-    codigo_mascota NUMERIC(5),
-    cantidad_comida NUMERIC(4) NOT NULL,
-    tipo VARCHAR(20) DEFAULT 'Perro' CHECK (tipo = 'Perro'),
-    PRIMARY KEY(codigo_mascota,tipo),
-    FOREIGN KEY (codigo_mascota,tipo) REFERENCES Mascota(codigo,tipo)
+    codigo_mascota NUMERIC(5) PRIMARY KEY REFERENCES Mascota,
+    cantidad_comida NUMERIC(4) NOT NULL
 ) ENGINE = InnoDB;
 
 CREATE TABLE Gato (
-    codigo_mascota NUMERIC(5),
-    fertilidad BOOLEAN NOT NULL,
-    tipo VARCHAR(20) DEFAULT 'Gato' CHECK (tipo = 'Gato'),
-    PRIMARY KEY (codigo_mascota,tipo),
-    FOREIGN KEY (codigo_mascota,tipo) REFERENCES Mascota(codigo,tipo)
+    codigo_mascota NUMERIC(5) PRIMARY KEY REFERENCES Mascota,
+    fertilidad BOOLEAN NOT NULL
 ) ENGINE = InnoDB;
 
 CREATE TABLE Revision (
@@ -178,8 +154,8 @@ CREATE TABLE Inyeccion_Antiparasitaria (
     fecha_estimada DATE NOT NULL,
     fecha_real DATE NOT NULL,
     resultado VARCHAR(100) NOT NULL,
-    codigo_mascota NUMERIC(5) NOT NULL,
-    veterinario NUMERIC(10) NOT NULL,
-    FOREIGN KEY (codigo_mascota,veterinario) REFERENCES Mascota(codigo,veterinario),
+    codigo_mascota NUMERIC(5) NOT NULL REFERENCES Perro(codigo_mascota),
+    veterinario NUMERIC(10) NOT NULL REFERENCES Veterinario(cedula_ciudadania),
+
     PRIMARY KEY (fecha_real, codigo_mascota)
 ) ENGINE = InnoDB;

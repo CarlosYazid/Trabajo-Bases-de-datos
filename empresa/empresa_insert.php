@@ -16,8 +16,19 @@ $refugio = $_POST["refugio"];
 $acogedor = $_POST["acogedor"];
 $hijode = $_POST["hijode"];
 
+if($tipo == "Perro"):
+	$cantidad_comida = $_POST["cantComida"];
+	$query2 = "INSERT INTO `perro` VALUES($codigo, $cantidad_comida);";
+else:
+	$fertilidad = $_POST["fertilidad"];
+	$query2 = "INSERT INTO `gato` VALUES($codigo, $fertilidad);";
+endif;
+
+
 if(($acogedor=="ninguno"&&$refugio=="ninguno")||($acogedor!="ninguno"&&$refugio!="ninguno")):
-	echo "Ha ocurrido un error al crear la persona";
+	echo "Ha ocurrido un error al crear la MASCOTA";
+	mysqli_close($conn);
+	exit;
 else:
 	// Query SQL a la BD. Si tienen que hacer comprobaciones, hacerlas acá (Generar una query diferente para casos especiales)
 	$query="";
@@ -36,9 +47,10 @@ else:
 
 	// Ejecutar consulta
 	$result = mysqli_query($conn, $query) or die(mysqli_error($conn));
+	$result2 = mysqli_query($conn, $query2) or die(mysqli_error($conn));
 
 	// Redirigir al usuario a la misma pagina
-	if($result):
+	if($result&&$result2):
     	// Si fue exitosa, redirigirse de nuevo a la página de la entidad
 		header("Location: empresa.php");
 	else:
