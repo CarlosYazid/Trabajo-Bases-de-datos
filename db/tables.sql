@@ -7,25 +7,25 @@ CREATE TABLE Usuario (
     telefono VARCHAR(20) NOT NULL,
     correo VARCHAR(100),
     tipo VARCHAR(30) CHECK (tipo IN ('adoptante', 'acogedor', 'veterinario')) NOT NULL
-) ENGINE = InnoDB;
+);
 
 CREATE TABLE Adoptante (
     cedula_ciudadania NUMERIC(10) PRIMARY KEY REFERENCES Usuario,
     profesion VARCHAR(100),
     fuente_ingresos VARCHAR(100) NOT NULL,
     direccion VARCHAR(100) NOT NULL
-) ENGINE = InnoDB;
+);
 
 CREATE TABLE Acogedor (
     cedula_ciudadania NUMERIC(10) PRIMARY KEY REFERENCES Usuario,
     direccion VARCHAR(100) NOT NULL,
     fuente_ingresos VARCHAR(100) NOT NULL
-) ENGINE = InnoDB;
+);
 
 CREATE TABLE Veterinario (
     cedula_ciudadania NUMERIC(10) PRIMARY KEY REFERENCES Usuario,
     especializacion VARCHAR(100) NOT NULL
-) ENGINE = InnoDB;
+);
 
 
 -- Creación de tabla de Refugios
@@ -35,7 +35,7 @@ CREATE TABLE Refugio (
   nombre VARCHAR(50) NOT NULL,
   direccion VARCHAR(100) NOT NULL,
   ciudad VARCHAR(50) NOT NULL
-) ENGINE = InnoDB;
+);
 
 
 -- Creación de tablas de Mascotas y relacionados
@@ -57,17 +57,17 @@ CREATE TABLE Mascota (
     FOREIGN KEY (acogedor) REFERENCES Acogedor(cedula_ciudadania),
     FOREIGN KEY (refugio) REFERENCES Refugio(codigo),
     FOREIGN KEY (veterinario) REFERENCES Veterinario(cedula_ciudadania)
-) ENGINE = InnoDB;
+);
 
 CREATE TABLE Perro (
     codigo_mascota NUMERIC(5) PRIMARY KEY REFERENCES Mascota,
     cantidad_comida NUMERIC(4) NOT NULL
-) ENGINE = InnoDB;
+);
 
 CREATE TABLE Gato (
     codigo_mascota NUMERIC(5) PRIMARY KEY REFERENCES Mascota,
     fertilidad BOOLEAN NOT NULL
-) ENGINE = InnoDB;
+);
 
 CREATE TABLE Revision (
   codigo NUMERIC(7) PRIMARY KEY,
@@ -78,7 +78,7 @@ CREATE TABLE Revision (
 
   FOREIGN KEY (veterinario) REFERENCES Veterinario(cedula_ciudadania),
   FOREIGN KEY (codigo_mascota) REFERENCES Mascota(codigo)
-) ENGINE = InnoDB;
+);
 
 CREATE TABLE Estado_Salud (
     fecha DATE NOT NULL,
@@ -88,7 +88,7 @@ CREATE TABLE Estado_Salud (
 
     PRIMARY KEY(codigo_mascota,tipo),
     FOREIGN KEY (codigo_mascota) REFERENCES Mascota(codigo)
-) ENGINE = InnoDB;
+);
 
 CREATE TABLE Optimo_Para_Adopcion (
     codigo_mascota NUMERIC(5),
@@ -96,7 +96,7 @@ CREATE TABLE Optimo_Para_Adopcion (
     tipo VARCHAR(6) DEFAULT 'Optimo' CHECK (tipo = 'Optimo'),
     PRIMARY KEY (codigo_mascota, tipo),
     FOREIGN KEY (codigo_mascota,tipo) REFERENCES Estado_Salud(codigo_mascota,tipo)
-) ENGINE = InnoDB;
+);
 
 -- Creación de tabla de Solicitudes de Adopción
 
@@ -110,7 +110,7 @@ CREATE TABLE Solicitud_Adopcion (
     PRIMARY KEY (codigo,tipo),
     FOREIGN KEY (codigo_mascota) REFERENCES Mascota(codigo),
     FOREIGN KEY (cedula_adoptante) REFERENCES Adoptante(cedula_ciudadania)
-) ENGINE = InnoDB;
+);
 
 CREATE TABLE Aprobada (
     codigo_solicitud VARCHAR(20) PRIMARY KEY,
@@ -118,7 +118,7 @@ CREATE TABLE Aprobada (
     tipo VARCHAR(30) DEFAULT 'Aprobada' CHECK (tipo = 'Aprobada'),
     UNIQUE (codigo_solicitud),
     FOREIGN KEY (codigo_solicitud,tipo) REFERENCES Solicitud_Adopcion(codigo,tipo)
-) ENGINE = InnoDB;
+);
 
 CREATE TABLE Rechazada (
     codigo_solicitud VARCHAR(20) PRIMARY KEY,
@@ -126,7 +126,7 @@ CREATE TABLE Rechazada (
     tipo VARCHAR(30) DEFAULT 'Rechazada' CHECK (tipo = 'Rechazada'),
 
     FOREIGN KEY (codigo_solicitud,tipo) REFERENCES Solicitud_Adopcion(codigo,tipo)
-) ENGINE = InnoDB;
+);
 
 CREATE TABLE Adopcion (
     codigo_solicitud VARCHAR(20) PRIMARY KEY,
@@ -134,7 +134,7 @@ CREATE TABLE Adopcion (
     observaciones TEXT NOT NULL,
 
     FOREIGN KEY (codigo_solicitud) REFERENCES Aprobada(codigo_solicitud)
-) ENGINE = InnoDB;
+);
 
 
 CREATE TABLE Devolucion (
@@ -146,7 +146,7 @@ CREATE TABLE Devolucion (
     FOREIGN KEY (mascota) REFERENCES Mascota(codigo),
     FOREIGN KEY (adoptante) REFERENCES Adoptante(cedula_ciudadania),
     PRIMARY KEY (mascota, fecha)
-) ENGINE = InnoDB;
+);
 
 -- Caso Especial: Creación de Inyección Antiparasitaria
 
@@ -158,4 +158,4 @@ CREATE TABLE Inyeccion_Antiparasitaria (
     veterinario NUMERIC(10) NOT NULL REFERENCES Veterinario(cedula_ciudadania),
 
     PRIMARY KEY (fecha_real, codigo_mascota)
-) ENGINE = InnoDB;
+);
