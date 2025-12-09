@@ -15,7 +15,8 @@ include "../includes/header.php";
 <p class="mt-3">
     Mostrar todos los datos del veterinario/a que mas inyecciones antiparasitarias
     ha realizado a perros que no fueron asignados a él/ella para revisiones médicas
-    periódicas.
+    periódicas; en caso de que haya más de uno, se verá en pantalla el que tenga menor 
+    cedula de cedula ciudadania.
 </p>
 
 <?php

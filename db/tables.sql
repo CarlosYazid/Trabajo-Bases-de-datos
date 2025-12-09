@@ -43,7 +43,7 @@ CREATE TABLE Refugio (
 
 CREATE TABLE Mascota (
     codigo NUMERIC(5) PRIMARY KEY CHECK(codigo > 0),
-    nombre VARCHAR(50) NOT NULL,
+    nombre VARCHAR(50) NOT NULL UNIQUE,
     tipo VARCHAR(20) CHECK (tipo IN ('Perro','Gato')) NOT NULL,
     edad NUMERIC(2) NOT NULL,
     sexo VARCHAR(20) NOT NULL,
