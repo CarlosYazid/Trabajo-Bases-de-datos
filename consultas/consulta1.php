@@ -45,8 +45,8 @@ if($resultadoC1&& $resultadoC1->num_rows > 1):
     while ($fila = mysqli_fetch_assoc($resultadoC1)) {
         $vets[] = $fila["veterinario"];
     }
-    sort($vets);
-    $veterinarioMenor = $vets[0];
+
+    $veterinarioMenor = min($vets);
 
 elseif($resultadoC1 && $resultadoC1->num_rows == 1):
     $fila = mysqli_fetch_assoc($resultadoC1);

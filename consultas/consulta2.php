@@ -14,7 +14,7 @@ include "../includes/header.php";
 
 <p class="mt-3 fw-bold">Caso particular:</p>
 <p class="mt-3">
-    Mostrar todos los datos del Perro que consume mayor cantidad de comida diariamente
+    Mostrar todos los datos del perro que consume mayor cantidad de comida diariamente
     y que nunca ha recibido una inyección antiparasitaria; en caso de que haya mas de uno,
     se verá en pantalla el que tenga mayor código asignado en el sistema.
 </p>
@@ -24,40 +24,37 @@ include "../includes/header.php";
 require('../config/conexion.php');
 
 // Query SQL a la BD -> Crearla acá (No está completada, cambiarla a su contexto y a su analogía)
-$query = "SELECT I.veterinario, COUNT(*) AS InyecVal
-            FROM inyeccion_antiparasitaria I JOIN mascota M ON I.codigo_mascota = M.codigo
-            WHERE I.veterinario <> M.veterinario
-            GROUP BY I.veterinario
-            HAVING COUNT(*) = (     SELECT MAX(InyecVal)
-                                    FROM  ( SELECT COUNT(*) AS InyecVal
-                                            FROM inyeccion_antiparasitaria I2 JOIN mascota M2 ON I2.codigo_mascota = M2.codigo
-                                            WHERE I2.veterinario <> M2.veterinario
-                                            GROUP BY I2.veterinario	) AS ConteoVal  
-                                )";
+$query = "SELECT codigo_mascota
+            FROM perro
+            WHERE cantidad_comida = (SELECT MAX(cantidad_comida) FROM perro)
+			                           AND
+	                codigo_mascota NOT IN (SELECT codigo_mascota
+                                            FROM inyeccion_antiparasitaria
+                                            GROUP BY codigo_mascota)";
 
 // Ejecutar la consulta
 $resultadoC1 = mysqli_query($conn, $query) or die(mysqli_error($conn));
 
-$veterinarioMenor = null;
+$mayorCod = null;
 if($resultadoC1&& $resultadoC1->num_rows > 1):
     $vets = [];
 
     while ($fila = mysqli_fetch_assoc($resultadoC1)) {
-        $vets[] = $fila["veterinario"];
+        $vets[] = $fila["codigo_mascota"];
     }
-    sort($vets);
-    $veterinarioMenor = $vets[0];
+
+    $mayorCod = max($vets);
 
 elseif($resultadoC1 && $resultadoC1->num_rows == 1):
     $fila = mysqli_fetch_assoc($resultadoC1);
-    $veterinarioMenor = $fila['veterinario'];
+    $mayorCod = $fila['codigo_mascota'];
 
 endif;
 
-if($veterinarioMenor != null):
-    $queryFinal = "SELECT U.cedula_ciudadania, nombre, apellido, telefono, correo, V.especializacion
-                    FROM usuario U, veterinario V
-                    WHERE U.cedula_ciudadania = V.cedula_ciudadania AND U.cedula_ciudadania = '$veterinarioMenor'";
+if($mayorCod != null):
+    $queryFinal = "SELECT M.codigo, M.veterinario, nombre, edad, sexo, descripcion, P.cantidad_comida
+                    FROM mascota M, perro P
+                    WHERE M.codigo = P.codigo_mascota AND P.codigo_mascota = '$mayorCod'";
     $resultadoFinal = mysqli_query($conn, $queryFinal) or die(mysqli_error($conn));
 else:
     $resultadoFinal = null;
@@ -79,12 +76,13 @@ if($resultadoFinal and $resultadoFinal->num_rows > 0):
         <!-- Títulos de la tabla, cambiarlos -->
         <thead class="table-dark">
             <tr>
-                <th scope="col" class="text-center">Cédula</th>
+                <th scope="col" class="text-center">Codigo<br>Perro</th>
+                <th scope="col" class="text-center">Veterinario<br>Responsable</th>
                 <th scope="col" class="text-center">Nombre</th>
-                <th scope="col" class="text-center">Apellido</th>
-                <th scope="col" class="text-center">Teléfono</th>
-                <th scope="col" class="text-center">Correo</th>
-                <th scope="col" class="text-center">Especialización</th>
+                <th scope="col" class="text-center">Edad</th>
+                <th scope="col" class="text-center">Sexo</th>
+                <th scope="col" class="text-center">Descripcion</th>
+                <th scope="col" class="text-center">Cantidad<br>Comida (gr)</th>
             </tr>
         </thead>
 
@@ -98,12 +96,13 @@ if($resultadoFinal and $resultadoFinal->num_rows > 0):
             <!-- Fila que se generará -->
             <tr>
                 <!-- Cada una de las columnas, con su valor correspondiente -->
-                <td class="text-center"><?= $fila["cedula_ciudadania"]; ?></td>
+                <td class="text-center"><?= $fila["codigo"]; ?></td>
+                <td class="text-center"><?= $fila["veterinario"]; ?></td>
                 <td class="text-center"><?= $fila["nombre"]; ?></td>
-                <td class="text-center"><?= $fila["apellido"]; ?></td>
-                <td class="text-center"><?= $fila["telefono"]; ?></td>
-                <td class="text-center"><?= $fila["correo"]; ?></td>
-                <td class="text-center"><?= $fila["especializacion"]; ?></td>
+                <td class="text-center"><?= $fila["edad"]; ?></td>
+                <td class="text-center"><?= $fila["sexo"]; ?></td>
+                <td class="text-center"><?= $fila["descripcion"]; ?></td>
+                <td class="text-center"><?= $fila["cantidad_comida"]; ?></td>
             </tr>
 
             <?php
@@ -122,7 +121,7 @@ else:
 ?>
 
 <div class="alert alert-danger text-center mt-5">
-    NO HAY REGISTRO DE VETERINARIOS QUE HAYAN REALIZADO INYECCIONES A PERROS QUE NO LE HAN SIDO ASIGNADOS
+    NO HAY REGISTRO DE PERROS NO INYECTADOS Y QUE CONSUMAN LA MAYOR CANTIDAD DE COMIDA DIARIAMENTE
 </div>
 
 <?php
