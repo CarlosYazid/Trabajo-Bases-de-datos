@@ -28,7 +28,7 @@ include "../includes/header.php";
         <!-- Consultar la lista de clientes y desplegarlos -->
         <div class="mb-3">
             <label for="mascota" class="form-label">Mascota</label>
-            <select name="mascota" id="mascota" class="form-select">
+            <select name="mascota" id="mascota" class="form-select" required>
                 
                 <!-- Option por defecto -->
                 <option value="" selected disabled hidden></option>
@@ -57,7 +57,7 @@ include "../includes/header.php";
 
         <div class="mb-3">
             <label for="veterinario" class="form-label">Veterinario</label>
-            <select name="veterinario" id="veterinario" class="form-select">
+            <select name="veterinario" id="veterinario" class="form-select" required>
                 
                 <!-- Option por defecto -->
                 <option value="" selected disabled hidden></option>
@@ -125,7 +125,7 @@ if($resultadoProyecto and $resultadoProyecto->num_rows > 0):
             <tr>
                 <!-- Cada una de las columnas, con su valor correspondiente -->
                 <td class="text-center">C.C. <?= $fila["codigo_mascota"]; ?></td>
-                <td class="text-center">NIT: <?= $fila["veterinario"]; ?></td>
+                <td class="text-center">C.C. <?= $fila["veterinario"]; ?></td>
                 <td class="text-center"><?= $fila["fecha_real"]; ?></td>
                 <td class="text-center"><?= $fila["fecha_estimada"]; ?></td>
                 <td class="text-center"><?= $fila["resultado"]; ?></td>
