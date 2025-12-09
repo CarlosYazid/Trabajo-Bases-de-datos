@@ -3,7 +3,7 @@ include "../includes/header.php";
 ?>
 
 <!-- TÍTULO. Cambiarlo, pero dejar especificada la analogía -->
-<h1 class="mt-3 fw-bold">Búsqueda 1</h1>
+<h1 class="mt-3 fw-bold">Búsqueda 1 (Busqueda de Inyecciones Antiparasitarias)</h1>
 
 <p class="mt-3 fw-bold">Caso general:</p>
 <p class="mt-3">
