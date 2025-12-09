@@ -3,7 +3,7 @@ include "../includes/header.php";
 ?>
 
 <!-- TÍTULO. Cambiarlo, pero dejar especificada la analogía -->
-<h1 class="mt-3 fw-bold">Búsqueda 2</h1>
+<h1 class="mt-3 fw-bold">Búsqueda 2 (Busqueda de veterinarios por cédula)</h1>
 
 <p class="mt-3 fw-bold">Caso general:</p>
     Dos números enteros n1 y n2, n1 ≥ 0, n2 > n1. Se debe mostrar el nit y el 
