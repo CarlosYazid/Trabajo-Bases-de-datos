@@ -1,7 +1,7 @@
 -- Creación de tablas de Usuarios
 
 CREATE TABLE Usuario (
-    cedula_ciudadania NUMERIC(10) PRIMARY KEY,
+    cedula_ciudadania NUMERIC(10) PRIMARY KEY CHECK(cedula_ciudadania > 0),
     nombre VARCHAR(50) NOT NULL,
     apellido VARCHAR(50) NOT NULL,
     telefono VARCHAR(20) NOT NULL,
@@ -10,20 +10,20 @@ CREATE TABLE Usuario (
 );
 
 CREATE TABLE Adoptante (
-    cedula_ciudadania NUMERIC(10) PRIMARY KEY REFERENCES Usuario,
+    cedula_ciudadania NUMERIC(10) PRIMARY KEY CHECK(cedula_ciudadania > 0) REFERENCES Usuario,
     profesion VARCHAR(100),
     fuente_ingresos VARCHAR(100) NOT NULL,
     direccion VARCHAR(100) NOT NULL
 );
 
 CREATE TABLE Acogedor (
-    cedula_ciudadania NUMERIC(10) PRIMARY KEY REFERENCES Usuario,
+    cedula_ciudadania NUMERIC(10) PRIMARY KEY CHECK(cedula_ciudadania > 0) REFERENCES Usuario ,
     direccion VARCHAR(100) NOT NULL,
     fuente_ingresos VARCHAR(100) NOT NULL
 );
 
 CREATE TABLE Veterinario (
-    cedula_ciudadania NUMERIC(10) PRIMARY KEY REFERENCES Usuario,
+    cedula_ciudadania NUMERIC(10) PRIMARY KEY CHECK(cedula_ciudadania > 0) REFERENCES Usuario,
     especializacion VARCHAR(100) NOT NULL
 );
 
@@ -42,7 +42,7 @@ CREATE TABLE Refugio (
 
 
 CREATE TABLE Mascota (
-    codigo NUMERIC(5) PRIMARY KEY,
+    codigo NUMERIC(5) PRIMARY KEY CHECK(codigo > 0),
     nombre VARCHAR(50) NOT NULL,
     tipo VARCHAR(20) CHECK (tipo IN ('Perro','Gato')) NOT NULL,
     edad NUMERIC(2) NOT NULL,
@@ -60,12 +60,12 @@ CREATE TABLE Mascota (
 );
 
 CREATE TABLE Perro (
-    codigo_mascota NUMERIC(5) PRIMARY KEY REFERENCES Mascota,
-    cantidad_comida NUMERIC(4) NOT NULL
+    codigo_mascota NUMERIC(5) PRIMARY KEY CHECK(codigo_mascota > 0) REFERENCES Mascota,
+    cantidad_comida NUMERIC(4) NOT NULL CHECK(cantidad_comida > 0)
 );
 
 CREATE TABLE Gato (
-    codigo_mascota NUMERIC(5) PRIMARY KEY REFERENCES Mascota,
+    codigo_mascota NUMERIC(5) PRIMARY KEY CHECK(codigo_mascota > 0) REFERENCES Mascota,
     fertilidad BOOLEAN NOT NULL
 );
 
@@ -154,8 +154,8 @@ CREATE TABLE Inyeccion_Antiparasitaria (
     fecha_estimada DATE NOT NULL,
     fecha_real DATE NOT NULL,
     resultado VARCHAR(100) NOT NULL,
-    codigo_mascota NUMERIC(5) NOT NULL REFERENCES Perro(codigo_mascota),
-    veterinario NUMERIC(10) NOT NULL REFERENCES Veterinario(cedula_ciudadania),
+    codigo_mascota NUMERIC(5) NOT NULL CHECK(codigo_mascota != 0) REFERENCES Perro(codigo_mascota),
+    veterinario NUMERIC(10) NOT NULL CHECK(veterinario != 0) REFERENCES Veterinario(cedula_ciudadania),
 
     PRIMARY KEY (fecha_real, codigo_mascota)
 );

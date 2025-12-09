@@ -12,7 +12,7 @@ include "../includes/header.php";
 
         <div class="mb-3">
             <label for="codigo" class="form-label">Código</label>
-            <input type="number" class="form-control" id="codigo" name="codigo" required>
+            <input type="number" class="form-control" id="codigo" placeholder="código > 0" name="codigo" required>
         </div>
 
         <div class="mb-3">
