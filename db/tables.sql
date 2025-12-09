@@ -16,7 +16,7 @@ CREATE TABLE Adoptante (
     direccion VARCHAR(100) NOT NULL,
     tipo VARCHAR(30) DEFAULT 'Adoptante' CHECK (tipo = 'Adoptante'),
 
-    FOREIGN KEY (cedula_ciudadania,tipo) REFERENCES Usuario(cedula_ciudadania,tipo)
+    FOREIGN KEY (cedula_ciudadania) REFERENCES Usuario(cedula_ciudadania)
 );
 
 CREATE TABLE Acogedor (
@@ -25,7 +25,7 @@ CREATE TABLE Acogedor (
     fuente_ingresos VARCHAR(100) NOT NULL,
     tipo VARCHAR(30) DEFAULT 'Acogedor' CHECK (tipo = 'Acogedor'),
 
-    FOREIGN KEY (cedula_ciudadania,tipo) REFERENCES Usuario(cedula_ciudadania,tipo)
+    FOREIGN KEY (cedula_ciudadania) REFERENCES Usuario(cedula_ciudadania)
 );
 
 CREATE TABLE Veterinario (
@@ -33,7 +33,7 @@ CREATE TABLE Veterinario (
     especializacion VARCHAR(100) NOT NULL,
     tipo VARCHAR(30) DEFAULT 'Veterinario' CHECK (tipo = 'Veterinario'),
 
-    FOREIGN KEY (cedula_ciudadania,tipo) REFERENCES Usuario(cedula_ciudadania,tipo)
+    FOREIGN KEY (cedula_ciudadania) REFERENCES Usuario(cedula_ciudadania)
 );
 
 
@@ -60,26 +60,22 @@ CREATE TABLE Mascota (
     hijo_de NUMERIC(5) NULL,            -- Mascota padre/madre
     refugio NUMERIC(4) NULL,    -- ID refugio
     acogedor NUMERIC(10) NULL,           -- Cedula de acogedor
+    veterinario NUMERIC(10) NOT NULL,
 
     FOREIGN KEY (hijo_de) REFERENCES Mascota(codigo),
     FOREIGN KEY (acogedor) REFERENCES Acogedor(cedula_ciudadania),
-    FOREIGN KEY (refugio) REFERENCES Refugio(codigo)
+    FOREIGN KEY (refugio) REFERENCES Refugio(codigo),
+    FOREIGN KEY (veterinario) REFERENCES Veterinario(cedula_ciudadania)
 );
 
 CREATE TABLE Perro (
     codigo_mascota NUMERIC(5) PRIMARY KEY,
-    cantidad_comida NUMERIC(4) NOT NULL,
-    tipo VARCHAR(20) DEFAULT 'Perro' CHECK (tipo = 'Perro'),
-
-    FOREIGN KEY (codigo_mascota,tipo) REFERENCES Mascota(codigo,tipo)
+    cantidad_comida NUMERIC(4) NOT NULL
 );
 
 CREATE TABLE Gato (
     codigo_mascota NUMERIC(5) PRIMARY KEY,
-    fertilidad BOOLEAN NOT NULL,
-    tipo VARCHAR(20) DEFAULT 'Gato' CHECK (tipo = 'Gato'),
-
-    FOREIGN KEY (codigo_mascota,tipo) REFERENCES Mascota(codigo,tipo)
+    fertilidad BOOLEAN NOT NULL
 );
 
 CREATE TABLE Revision (
@@ -107,7 +103,7 @@ CREATE TABLE Optimo_Para_Adopcion (
     observaciones TEXT NOT NULL,
     tipo VARCHAR(6) DEFAULT 'Optimo' CHECK (tipo = 'Optimo'),
 
-    FOREIGN KEY (codigo_mascota,tipo) REFERENCES Estado_Salud(codigo_mascota,tipo)
+    FOREIGN KEY (codigo_mascota) REFERENCES Estado_Salud(codigo_mascota)
 );
 
 -- Creación de tabla de Solicitudes de Adopción
@@ -129,7 +125,7 @@ CREATE TABLE Aprobada (
     recomendaciones TEXT NOT NULL,
     tipo VARCHAR(30) DEFAULT 'Aprobada' CHECK (tipo = 'Aprobada'),
 
-    FOREIGN KEY (codigo_solicitud,tipo) REFERENCES Solicitud_Adopcion(codigo,tipo)
+    FOREIGN KEY (codigo_solicitud) REFERENCES Solicitud_Adopcion(codigo)
 );
 
 CREATE TABLE Rechazada (
@@ -137,7 +133,7 @@ CREATE TABLE Rechazada (
     motivo TEXT NOT NULL,
     tipo VARCHAR(30) DEFAULT 'Rechazada' CHECK (tipo = 'Rechazada'),
 
-    FOREIGN KEY (codigo_solicitud,tipo) REFERENCES Solicitud_Adopcion(codigo,tipo)
+    FOREIGN KEY (codigo_solicitud) REFERENCES Solicitud_Adopcion(codigo)
 );
 
 CREATE TABLE Adopcion (
@@ -167,7 +163,9 @@ CREATE TABLE Inyeccion_Antiparasitaria (
     fecha_estimada DATE NOT NULL,
     resultado VARCHAR(100) NOT NULL,
     codigo_mascota NUMERIC(5) NOT NULL,
+    veterinario NUMERIC(10) NOT NULL,
 
     FOREIGN KEY (codigo_mascota) REFERENCES Mascota(codigo),
+    FOREIGN KEY (veterinario) REFERENCES Veterinario(cedula_ciudadania),
     PRIMARY KEY (fecha_real, codigo_mascota)
 );

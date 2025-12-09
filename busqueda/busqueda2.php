@@ -3,20 +3,18 @@ include "../includes/header.php";
 ?>
 
 <!-- TÍTULO. Cambiarlo, pero dejar especificada la analogía -->
-<h1 class="mt-3 fw-bold">Búsqueda 2</h1>
+<h1 class="mt-3 fw-bold">Búsqueda de veterinario por cédula</h1>
 
 <p class="mt-3 fw-bold">Caso general:</p>
 <p class="mt-3">
-    Dos números enteros n1 y n2, n1 ≥ 0, n2 > n1. Se debe mostrar el nit y el 
-    nombre de todas las empresas que han revisado entre n1 y n2 proyectos
-    (intervalo cerrado [n1, n2]).
+    Busqueda por la cédula de un veterinario. 
 </p>
 
 <p class="mt-3 fw-bold">Caso particular:</p>
 <p class="mt-3">
-    Dos números enteros n1 y n2, n1 ≥ 0, n2 > n1. Se debe mostrar el nit y el 
-    nombre de todas las empresas que han revisado entre n1 y n2 proyectos
-    (intervalo cerrado [n1, n2]).
+    Se debe mostrar todos los datos de este veterinario
+junto con todos los datos de los gatos que este veterinario cuida pero solo de aquellos
+gatos que no son fertiles.
 </p>
 
 <!-- FORMULARIO. Cambiar los campos de acuerdo a su trabajo -->
@@ -26,13 +24,8 @@ include "../includes/header.php";
     <form action="busqueda2.php" method="post" class="form-group">
 
         <div class="mb-3">
-            <label for="numero1" class="form-label">Numero 1</label>
-            <input type="number" class="form-control" id="numero1" name="numero1" required>
-        </div>
-
-        <div class="mb-3">
-            <label for="numero2" class="form-label">Numero 2</label>
-            <input type="number" class="form-control" id="numero2" name="numero2" required>
+            <label for="cedula" class="form-label">Cédula</label>
+            <input type="number" class="form-control" id="cedula" name="cedula" required>
         </div>
 
         <button type="submit" class="btn btn-primary">Buscar</button>
@@ -48,11 +41,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'):
     // Crear conexión con la BD
     require('../config/conexion.php');
 
-    $numero1 = $_POST["numero1"];
-    $numero2 = $_POST["numero2"];
+    $cedula = $_POST["cedula"];
 
     // Query SQL a la BD -> Crearla acá (No está completada, cambiarla a su contexto y a su analogía)
-    $query = "SELECT nit, nombre FROM empresa";
+    $query = "SELECT V.cedula_ciudadania as cedula, 
+            U.nombre as nombre_veterinario, U.apellido, U.telefono, U.correo,
+            M.codigo as codigo_mascota, M.nombre as nombre_mascota, M.tipo, M.edad as edad_mascota, M.sexo as sexo_mascota, M.descripcion, M.hijo_de, M.refugio, M.acogedor,
+            G.fertilidad
+            FROM Veterinario V
+            JOIN Usuario U ON V.cedula_ciudadania = U.cedula_ciudadania
+            JOIN Mascota M ON V.cedula_ciudadania = M.veterinario
+            JOIN Gato G ON G.codigo_mascota = M.codigo
+            WHERE G.fertilidad = 0 and V.cedula_ciudadania = $cedula";
 
     // Ejecutar la consulta
     $resultadoB2 = mysqli_query($conn, $query) or die(mysqli_error($conn));
@@ -72,7 +72,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'):
         <thead class="table-dark">
             <tr>
                 <th scope="col" class="text-center">Cédula</th>
-                <th scope="col" class="text-center">Celular</th>
+                <th scope="col" class="text-center">Nombre Veterinario</th>
+                <th scope="col" class="text-center">Apellido</th>
+                <th scope="col" class="text-center">Telefono</th>
+                <th scope="col" class="text-center">Correo</th>
+                <th scope="col" class="text-center">Apellido</th>
+                <th scope="col" class="text-center">Codigo Mascota</th>
+                <th scope="col" class="text-center">Nombre Mascota</th>
+                <th scope="col" class="text-center">Tipo</th>
+                <th scope="col" class="text-center">Edad Mascota</th>
+                <th scope="col" class="text-center">Sexo Mascota</th>
+                <th scope="col" class="text-center">Descripción</th>
+                <th scope="col" class="text-center">Hijo de la Mascota</th>
+                <th scope="col" class="text-center">Refugio</th>
+                <th scope="col" class="text-center">Acogedor</th>
+                <th scope="col" class="text-center">Fertilidad</th>
             </tr>
         </thead>
 
@@ -87,7 +101,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'):
             <tr>
                 <!-- Cada una de las columnas, con su valor correspondiente -->
                 <td class="text-center"><?= $fila["cedula"]; ?></td>
-                <td class="text-center"><?= $fila["celular"]; ?></td>
+                <td class="text-center"><?= $fila["nombre_veterinario"]; ?></td>
+                <td class="text-center"><?= $fila["apellido"]; ?></td>
+                <td class="text-center"><?= $fila["telefono"]; ?></td>
+                <td class="text-center"><?= $fila["correo"]; ?></td>
+                <td class="text-center"><?= $fila["codigo_mascota"]; ?></td>
+                <td class="text-center"><?= $fila["nombre_mascota"]; ?></td>
+                <td class="text-center"><?= $fila["tipo"]; ?></td>
+                <td class="text-center"><?= $fila["edad_mascota"]; ?></td>
+                <td class="text-center"><?= $fila["descripcion"]; ?></td>
+                <td class="text-center"><?= $fila["hijo_de"]; ?></td>
+                <td class="text-center"><?= $fila["refugio"]; ?></td>
+                <td class="text-center"><?= $fila["acogedor"]; ?></td>
+                <td class="text-center"><?= $fila["fertilidad"]; ?></td>
             </tr>
 
             <?php
