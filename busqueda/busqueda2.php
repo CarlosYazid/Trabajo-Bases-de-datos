@@ -3,16 +3,19 @@ include "../includes/header.php";
 ?>
 
 <!-- TÍTULO. Cambiarlo, pero dejar especificada la analogía -->
-<h1 class="mt-3 fw-bold">Búsqueda de veterinario por cédula</h1>
+<h1 class="mt-3 fw-bold">Búsqueda 2</h1>
 
 <p class="mt-3 fw-bold">Caso general:</p>
+    Dos números enteros n1 y n2, n1 ≥ 0, n2 > n1. Se debe mostrar el nit y el 
+    nombre de todas las empresas que han revisado entre n1 y n2 proyectos
+    (intervalo cerrado [n1, n2]).
 <p class="mt-3">
-    Busqueda por la cédula de un veterinario. 
+    
 </p>
 
 <p class="mt-3 fw-bold">Caso particular:</p>
 <p class="mt-3">
-    Se debe mostrar todos los datos de este veterinario
+Busqueda por la cédula de un veterinario. Se debe mostrar todos los datos de este veterinario
 junto con todos los datos de los gatos que este veterinario cuida pero solo de aquellos
 gatos que no son fertiles.
 </p>

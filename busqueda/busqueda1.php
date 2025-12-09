@@ -3,21 +3,21 @@ include "../includes/header.php";
 ?>
 
 <!-- TÍTULO. Cambiarlo, pero dejar especificada la analogía -->
-<h1 class="mt-3 fw-bold">Inyecciones Antiparasitarias dentro de un rango de fechas</h1>
+<h1 class="mt-3 fw-bold">Búsqueda 1</h1>
 
 <p class="mt-3 fw-bold">Caso general:</p>
-<p class="mt-3">
-    Dos fechas f1 y f2, f2 &gt; f1 (cada una en formato año-mes-día). Se debe
-mostrar todas las inyección antiparasitaria cuya fecha real esté comprendida entre f1 (inclusive)
-y f2 (inclusive), cada una de estas inyección antiparasitaria debe estar acompañada de todos los
-datos del ejecutor (empleado) y de todos los datos del perro correspondiente.
-</p>
-
-<p class="mt-3 fw-bold">Caso particular:</p>
 <p class="mt-3">
     Dos fechas f1 y f2 (cada fecha con día, mes y año), f2 ≥ f1 y un número entero n,
     n ≥ 0. Se debe mostrar la cédula y el celular de todos los clientes que han 
     revisado exactamente n proyectos en dicho rango de fechas [f1, f2].
+</p>
+
+<p class="mt-3 fw-bold">Caso particular:</p>
+<p class="mt-3">
+    Dos fechas f1 y f2, f2 &gt; f1 (cada una en formato año-mes-día). Se debe
+    mostrar todas las inyección antiparasitaria cuya fecha real esté comprendida entre f1 (inclusive)
+    y f2 (inclusive), cada una de estas inyección antiparasitaria debe estar acompañada de todos los
+    datos del ejecutor (empleado) y de todos los datos del perro correspondiente.
 </p>
 
 <!-- FORMULARIO. Cambiar los campos de acuerdo a su trabajo -->

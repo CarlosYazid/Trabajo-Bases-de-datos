@@ -146,37 +146,37 @@ INSERT INTO Refugio(codigo, nombre, direccion, ciudad) VALUES
 -- ============================
 
 INSERT INTO Mascota(codigo, nombre, tipo, edad, sexo, descripcion, hijo_de, refugio, acogedor, veterinario) VALUES
-(5001, 'Toby', 'Perro', 9, 'Masculino', 'Perro negro criollo, tranquilo', NULL, 12, NULL, 3000000001),
-(5002, 'Rocco', 'Perro', 4, 'Masculino', 'Labrador juguetón', NULL, 1, 2000000002, 3000000002),
-(5003, 'Luna', 'Perro', 2, 'Femenino', 'Cachorra mestiza, enérgica', NULL, 2, 2000000003, 3000000003),
-(5004, 'Max', 'Perro', 6, 'Masculino', 'Husky cruzado, necesita ejercicio', NULL, 3, NULL, 3000000001),
-(5005, 'Nala', 'Perro', 3, 'Femenino', 'Pequeña, buen carácter con niños', 5003, NULL, 2000000001, 3000000003),
-(5006, 'Bruno', 'Perro', 7, 'Masculino', 'Muy sociable', NULL, 4, NULL, 3000000002),
-(5007, 'Oso', 'Perro', 5, 'Masculino', 'Protector del hogar', NULL, 5, 2000000005, 3000000003),
-(5008, 'Kira', 'Perro', 1, 'Femenino', 'Baja audición', NULL, NULL, 2000000006, 3000000001),
-(5009, 'Rocky', 'Perro', 8, 'Masculino', 'Muy activo, necesita espacio', NULL, 6, NULL, 3000000009),
-(5010, 'Maya', 'Perro', 2, 'Femenino', 'Afectuosa y tranquila', NULL, 7, 2000000007, 3000000002),
-(5011, 'Zeus', 'Perro', 10, 'Masculino', 'Adulto calmado', NULL, 8, NULL, 3000000001),
-(5012, 'Loki', 'Perro', 3, 'Masculino', 'Busca compañía', NULL, 9, 2000000011, 3000000009),
-(5013, 'Balu', 'Perro', 4, 'Masculino', 'Buen guardián', NULL, 10, NULL, 3000000008),
-(5014, 'Fido', 'Perro', 6, 'Masculino', 'Buen compañero', NULL, 11, NULL, 3000000002),
-(5015, 'Coco', 'Perro', 2, 'Femenino', 'Pequeña y enérgica', NULL, 15, 2000000015, 3000000001),
+(5001, 'Toby', 'Perro', 9, 'Macho', 'Perro negro criollo, tranquilo', NULL, 12, NULL, 3000000001),
+(5002, 'Rocco', 'Perro', 4, 'Macho', 'Labrador juguetón', NULL, 1, 2000000002, 3000000002),
+(5003, 'Luna', 'Perro', 2, 'Hembra', 'Cachorra mestiza, enérgica', NULL, 2, 2000000003, 3000000003),
+(5004, 'Max', 'Perro', 6, 'Macho', 'Husky cruzado, necesita ejercicio', NULL, 3, NULL, 3000000001),
+(5005, 'Nala', 'Perro', 3, 'Hembra', 'Pequeña, buen carácter con niños', 5003, NULL, 2000000001, 3000000003),
+(5006, 'Bruno', 'Perro', 7, 'Macho', 'Muy sociable', NULL, 4, NULL, 3000000002),
+(5007, 'Oso', 'Perro', 5, 'Macho', 'Protector del hogar', NULL, 5, 2000000005, 3000000003),
+(5008, 'Kira', 'Perro', 1, 'Hembra', 'Baja audición', NULL, NULL, 2000000006, 3000000001),
+(5009, 'Rocky', 'Perro', 8, 'Macho', 'Muy activo, necesita espacio', NULL, 6, NULL, 3000000009),
+(5010, 'Maya', 'Perro', 2, 'Hembra', 'Afectuosa y tranquila', NULL, 7, 2000000007, 3000000002),
+(5011, 'Zeus', 'Perro', 10, 'Macho', 'Adulto calmado', NULL, 8, NULL, 3000000001),
+(5012, 'Loki', 'Perro', 3, 'Macho', 'Busca compañía', NULL, 9, 2000000011, 3000000009),
+(5013, 'Balu', 'Perro', 4, 'Macho', 'Buen guardián', NULL, 10, NULL, 3000000008),
+(5014, 'Fido', 'Perro', 6, 'Macho', 'Buen compañero', NULL, 11, NULL, 3000000002),
+(5015, 'Coco', 'Perro', 2, 'Hembra', 'Pequeña y enérgica', NULL, 15, 2000000015, 3000000001),
 
-(6001, 'Tom', 'Gato', 7, 'Masculino', 'Gato calicó, independiente', NULL, 1, NULL,3000000002),
-(6002, 'Anfítrite', 'Gato', 3, 'Femenino', 'Gata con un ojo, cariñosa', NULL, 1, NULL, 3000000001),
-(6003, 'Pepita', 'Gato', 3, 'Femenino', 'Hamster-like (gato calmado)', NULL, 7, NULL, 3000000007),
-(6004, 'Michi', 'Gato', 2, 'Masculino', 'Juguetón y curioso', NULL, 2, 2000000008, 3000000007),
-(6005, 'Gata', 'Gato', 1, 'Femenino', 'Cachorra, necesita cuidados', NULL, 3, 2000000009, 3000000006),
-(6006, 'Nube', 'Gato', 5, 'Femenino', 'Pelaje largo, tranquila', NULL, 4, NULL, 3000000005),
-(6007, 'Silvestre', 'Gato', 6, 'Masculino', 'Caza pequeñas presas', NULL, 5, NULL, 3000000001),
-(6008, 'Lila', 'Gato', 2, 'Femenino', 'Sociable con otros gatos', NULL, NULL, 2000000010, 3000000006),
-(6009, 'Gris', 'Gato', 4, 'Masculino', 'Algo tímido al principio', NULL, 6, NULL, 3000000002),
-(6010, 'Mora', 'Gato', 3, 'Femenino', 'Afectuosa y tranquila', NULL, 8, 2000000012, 3000000005),
-(6011, 'Pelusa', 'Gato', 8, 'Masculino', 'Adulto calmado', NULL, 9, NULL, 3000000004),
-(6012, 'Sombra', 'Gato', 5, 'Femenino', 'Le gusta dormir en sillones', NULL, 10, 2000000013, 3000000001),
-(6013, 'NalaG', 'Gato', 2, 'Femenino', 'Muy juguetona', NULL, 11, 2000000014, 3000000005),
-(6014, 'Cereza', 'Gato', 1, 'Femenino', 'Reciente rescate, asustada', NULL, 12, NULL, 3000000004),
-(6015, 'Ginger', 'Gato', 4, 'Masculino', 'Buen carácter', NULL, 13, NULL, 3000000004);
+(6001, 'Tom', 'Gato', 7, 'Macho', 'Gato calicó, independiente', NULL, 1, NULL,3000000002),
+(6002, 'Anfítrite', 'Gato', 3, 'Hembra', 'Gata con un ojo, cariñosa', NULL, 1, NULL, 3000000001),
+(6003, 'Pepita', 'Gato', 3, 'Hembra', 'Hamster-like (gato calmado)', NULL, 7, NULL, 3000000007),
+(6004, 'Michi', 'Gato', 2, 'Macho', 'Juguetón y curioso', NULL, 2, 2000000008, 3000000007),
+(6005, 'Gata', 'Gato', 1, 'Hembra', 'Cachorra, necesita cuidados', NULL, 3, 2000000009, 3000000006),
+(6006, 'Nube', 'Gato', 5, 'Hembra', 'Pelaje largo, tranquila', NULL, 4, NULL, 3000000005),
+(6007, 'Silvestre', 'Gato', 6, 'Macho', 'Caza pequeñas presas', NULL, 5, NULL, 3000000001),
+(6008, 'Lila', 'Gato', 2, 'Hembra', 'Sociable con otros gatos', NULL, NULL, 2000000010, 3000000006),
+(6009, 'Gris', 'Gato', 4, 'Macho', 'Algo tímido al principio', NULL, 6, NULL, 3000000002),
+(6010, 'Mora', 'Gato', 3, 'Hembra', 'Afectuosa y tranquila', NULL, 8, 2000000012, 3000000005),
+(6011, 'Pelusa', 'Gato', 8, 'Macho', 'Adulto calmado', NULL, 9, NULL, 3000000004),
+(6012, 'Sombra', 'Gato', 5, 'Hembra', 'Le gusta dormir en sillones', NULL, 10, 2000000013, 3000000001),
+(6013, 'NalaG', 'Gato', 2, 'Hembra', 'Muy juguetona', NULL, 11, 2000000014, 3000000005),
+(6014, 'Cereza', 'Gato', 1, 'Hembra', 'Reciente rescate, asustada', NULL, 12, NULL, 3000000004),
+(6015, 'Ginger', 'Gato', 4, 'Macho', 'Buen carácter', NULL, 13, NULL, 3000000004);
 
 -- ============================
 -- 7) Perro (subtipo) - 15 filas
@@ -427,7 +427,7 @@ INSERT INTO Devolucion(fecha, mascota, adoptante, motivo) VALUES
 -- 17) Inyeccion_Antiparasitaria (15 filas)
 -- ============================
 
-INSERT INTO Inyeccion_Antiparasitaria(fecha_real, fecha_estimada, resultado, codigo_mascota, veterinario) VALUES
+INSERT INTO Inyeccion_Antiparasitaria(fecha_estimada, fecha_real, resultado, codigo_mascota, veterinario) VALUES
 ('2025-08-10', '2025-08-08', 'Negativo - Sin parásitos detectados', 6001, 3000000001),
 ('2025-08-14', '2025-08-12', 'Negativo', 5001, 3000000002),
 ('2025-09-01', '2025-08-30', 'Positivo - Tratamiento indicado', 5002, 3000000007),

@@ -51,8 +51,8 @@ CREATE TABLE Mascota (
     codigo NUMERIC(5) PRIMARY KEY CHECK(codigo > 0),
     nombre VARCHAR(50) NOT NULL,
     tipo VARCHAR(20) CHECK (tipo IN ('Perro','Gato')) NOT NULL,
-    edad NUMERIC(2) NOT NULL CHECK(codigo > 0),
-    sexo VARCHAR(20) NOT NULL CHECK (tipo IN ('Macho','Hembra')),
+    edad NUMERIC(2) NOT NULL CHECK(edad > 0),
+    sexo VARCHAR(20) NOT NULL CHECK (sexo IN ('Macho','Hembra')),
     descripcion TEXT NOT NULL,
     hijo_de NUMERIC(5),
     refugio NUMERIC(4),
@@ -94,6 +94,7 @@ CREATE TABLE Estado_Salud (
     codigo_mascota NUMERIC(5) PRIMARY KEY CHECK(codigo_mascota > 0),    -- CP / también CF hacia Mascota
     fecha DATE NOT NULL,
     diagnostico VARCHAR(200) NOT NULL,
+    tipo VARCHAR(20),
 
     FOREIGN KEY (codigo_mascota) REFERENCES Mascota(codigo)
 );
