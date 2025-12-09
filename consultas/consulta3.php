@@ -15,48 +15,53 @@ include "../includes/header.php";
 <p class="mt-3 fw-bold">Caso particular:</p>
 <p class="mt-3">
     Mostrar todos los datos del gato de mayor edad que aun conserva su fertilidad,
-    junto con los datos del veterinario encargado de sus revisiones médicas; en caso 
-    de que haya más de uno, se verá en pantalla el gato que tenga el nombre mas corto
+    junto con los datos del veterinario responsable de sus revisiones médicas; en caso 
+    de que haya más de uno, se verá en pantalla el gato que tenga el nombre mayor alfabéticamente.
+</p>
 
 <?php
 // Crear conexión con la BD
 require('../config/conexion.php');
 
 // Query SQL a la BD -> Crearla acá (No está completada, cambiarla a su contexto y a su analogía)
-$query = "SELECT I.veterinario, COUNT(*) AS InyecVal
-            FROM inyeccion_antiparasitaria I JOIN mascota M ON I.codigo_mascota = M.codigo
-            WHERE I.veterinario <> M.veterinario
-            GROUP BY I.veterinario
-            HAVING COUNT(*) = (     SELECT MAX(InyecVal)
-                                    FROM  ( SELECT COUNT(*) AS InyecVal
-                                            FROM inyeccion_antiparasitaria I2 JOIN mascota M2 ON I2.codigo_mascota = M2.codigo
-                                            WHERE I2.veterinario <> M2.veterinario
-                                            GROUP BY I2.veterinario	) AS ConteoVal  
-                                )";
+$query = "SELECT G.codigo_mascota, M.nombre, M.veterinario
+            FROM gato G, mascota M
+            WHERE G.codigo_mascota = M.codigo 
+                    AND G.fertilidad = TRUE 
+                        AND M.edad = ( SELECT MAX(edad)
+									    FROM ( SELECT M.edad
+										        FROM gato G, mascota M
+										        WHERE G.codigo_mascota = M.codigo AND G.fertilidad = TRUE ) AS edadesFertiles
+									)";
 
 // Ejecutar la consulta
 $resultadoC1 = mysqli_query($conn, $query) or die(mysqli_error($conn));
 
-$veterinarioMenor = null;
+$nomMayor = null;
 if($resultadoC1&& $resultadoC1->num_rows > 1):
-    $vets = [];
 
     while ($fila = mysqli_fetch_assoc($resultadoC1)) {
-        $vets[] = $fila["veterinario"];
+        if ($nomMayor === null || $fila["nombre"] > $nomMayor) {
+            $nomMayor = $fila["nombre"];
+            $vetMayor = $fila["veterinario"];
+            $codMayor = $fila["codigo_mascota"];
+        }
     }
-    sort($vets);
-    $veterinarioMenor = $vets[0];
 
 elseif($resultadoC1 && $resultadoC1->num_rows == 1):
     $fila = mysqli_fetch_assoc($resultadoC1);
-    $veterinarioMenor = $fila['veterinario'];
+    $nomMayor = $fila['nombre'];
+    $vetMayor = $fila['veterinario'];
+    $codMayor = $fila['codigo_mascota'];
 
 endif;
 
-if($veterinarioMenor != null):
-    $queryFinal = "SELECT U.cedula_ciudadania, nombre, apellido, telefono, correo, V.especializacion
-                    FROM usuario U, veterinario V
-                    WHERE U.cedula_ciudadania = V.cedula_ciudadania AND U.cedula_ciudadania = '$veterinarioMenor'";
+if($nomMayor != null):
+    $queryFinal = "SELECT M.codigo, M.nombre AS nombreMas, M.tipo, M.edad, M.sexo, M.descripcion, V.cedula_ciudadania, U.nombre AS nombreVet, U.telefono, V.especializacion
+                    FROM mascota M, veterinario V, usuario U
+                    WHERE M.veterinario = V.cedula_ciudadania AND V.cedula_ciudadania = U.cedula_ciudadania 
+                            AND M.codigo = '$codMayor'
+                                AND V.cedula_ciudadania = '$vetMayor'";
     $resultadoFinal = mysqli_query($conn, $queryFinal) or die(mysqli_error($conn));
 else:
     $resultadoFinal = null;
@@ -78,11 +83,15 @@ if($resultadoFinal and $resultadoFinal->num_rows > 0):
         <!-- Títulos de la tabla, cambiarlos -->
         <thead class="table-dark">
             <tr>
-                <th scope="col" class="text-center">Cédula</th>
-                <th scope="col" class="text-center">Nombre</th>
-                <th scope="col" class="text-center">Apellido</th>
-                <th scope="col" class="text-center">Teléfono</th>
-                <th scope="col" class="text-center">Correo</th>
+                <th scope="col" class="text-center">Codigo<br>Mascota</th>
+                <th scope="col" class="text-center">Nombre<br>Mascota</th>
+                <th scope="col" class="text-center">Tipo</th>
+                <th scope="col" class="text-center">Edad</th>
+                <th scope="col" class="text-center">Sexo</th>
+                <th scope="col" class="text-center">Descripción</th>
+                <th scope="col" class="text-center">C.C. Veterinario<br>Responsable</th>
+                <th scope="col" class="text-center">Nombre<br>Veterinario</th>
+                <th scope="col" class="text-center">Telefono</th>
                 <th scope="col" class="text-center">Especialización</th>
             </tr>
         </thead>
@@ -97,11 +106,15 @@ if($resultadoFinal and $resultadoFinal->num_rows > 0):
             <!-- Fila que se generará -->
             <tr>
                 <!-- Cada una de las columnas, con su valor correspondiente -->
+                <td class="text-center"><?= $fila["codigo"]; ?></td>
+                <td class="text-center"><?= $fila["nombreMas"]; ?></td>
+                <td class="text-center"><?= $fila["tipo"]; ?></td>
+                <td class="text-center"><?= $fila["edad"]; ?></td>
+                <td class="text-center"><?= $fila["sexo"]; ?></td>
+                <td class="text-center"><?= $fila["descripcion"]; ?></td>
                 <td class="text-center"><?= $fila["cedula_ciudadania"]; ?></td>
-                <td class="text-center"><?= $fila["nombre"]; ?></td>
-                <td class="text-center"><?= $fila["apellido"]; ?></td>
+                <td class="text-center"><?= $fila["nombreVet"]; ?></td>
                 <td class="text-center"><?= $fila["telefono"]; ?></td>
-                <td class="text-center"><?= $fila["correo"]; ?></td>
                 <td class="text-center"><?= $fila["especializacion"]; ?></td>
             </tr>
 
@@ -121,7 +134,7 @@ else:
 ?>
 
 <div class="alert alert-danger text-center mt-5">
-    NO HAY REGISTRO DE VETERINARIOS QUE HAYAN REALIZADO INYECCIONES A PERROS QUE NO LE HAN SIDO ASIGNADOS
+    NO HAY REGISTRO DE GATOS QUE AUN CONSERVEN SU FERTILIDAD
 </div>
 
 <?php
