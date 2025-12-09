@@ -1,37 +1,34 @@
 -- Creación de tablas de Usuarios
 
 CREATE TABLE Usuario (
-    cedula_ciudadania NUMERIC(10) PRIMARY KEY,
+    cedula_ciudadania NUMERIC(10) PRIMARY KEY CHECK(cedula_ciudadania > 0),
     nombre VARCHAR(50) NOT NULL,
     apellido VARCHAR(50) NOT NULL,
     telefono VARCHAR(20) NOT NULL,
     correo VARCHAR(100),
-    tipo VARCHAR(30) CHECK (tipo IN ('Adoptante', 'Acogedor', 'Veterinario')) NOT NULL
+    tipo VARCHAR(30) CHECK (tipo IN ('adoptante', 'acogedor', 'veterinario')) NOT NULL
 );
 
 CREATE TABLE Adoptante (
-    cedula_ciudadania NUMERIC(10) PRIMARY KEY,
+    cedula_ciudadania NUMERIC(10) PRIMARY KEY CHECK(cedula_ciudadania > 0),
     profesion VARCHAR(100),
     fuente_ingresos VARCHAR(100) NOT NULL,
     direccion VARCHAR(100) NOT NULL,
-    tipo VARCHAR(30) DEFAULT 'Adoptante' CHECK (tipo = 'Adoptante'),
 
     FOREIGN KEY (cedula_ciudadania) REFERENCES Usuario(cedula_ciudadania)
 );
 
 CREATE TABLE Acogedor (
-    cedula_ciudadania NUMERIC(10) PRIMARY KEY,
+    cedula_ciudadania NUMERIC(10) PRIMARY KEY CHECK(cedula_ciudadania > 0),
     direccion VARCHAR(100) NOT NULL,
     fuente_ingresos VARCHAR(100) NOT NULL,
-    tipo VARCHAR(30) DEFAULT 'Acogedor' CHECK (tipo = 'Acogedor'),
 
     FOREIGN KEY (cedula_ciudadania) REFERENCES Usuario(cedula_ciudadania)
 );
 
 CREATE TABLE Veterinario (
-    cedula_ciudadania NUMERIC(10) PRIMARY KEY,
+    cedula_ciudadania NUMERIC(10) PRIMARY KEY CHECK(cedula_ciudadania > 0),
     especializacion VARCHAR(100) NOT NULL,
-    tipo VARCHAR(30) DEFAULT 'Veterinario' CHECK (tipo = 'Veterinario'),
 
     FOREIGN KEY (cedula_ciudadania) REFERENCES Usuario(cedula_ciudadania)
 );
@@ -40,7 +37,7 @@ CREATE TABLE Veterinario (
 -- Creación de tabla de Refugios
 
 CREATE TABLE Refugio (
-  codigo NUMERIC(4) PRIMARY KEY,
+  codigo NUMERIC(4) PRIMARY KEY CHECK(codigo > 0),
   nombre VARCHAR(50) NOT NULL,
   direccion VARCHAR(100) NOT NULL,
   ciudad VARCHAR(50) NOT NULL
@@ -51,15 +48,15 @@ CREATE TABLE Refugio (
 
 
 CREATE TABLE Mascota (
-    codigo NUMERIC(5) PRIMARY KEY,
+    codigo NUMERIC(5) PRIMARY KEY CHECK(codigo > 0),
     nombre VARCHAR(50) NOT NULL,
     tipo VARCHAR(20) CHECK (tipo IN ('Perro','Gato')) NOT NULL,
-    edad NUMERIC(2) NOT NULL,
-    sexo VARCHAR(20) NOT NULL,
+    edad NUMERIC(2) NOT NULL CHECK(codigo > 0),
+    sexo VARCHAR(20) NOT NULL CHECK (tipo IN ('Macho','Hembra')),
     descripcion TEXT NOT NULL,
-    hijo_de NUMERIC(5) NULL,            -- Mascota padre/madre
-    refugio NUMERIC(4) NULL,    -- ID refugio
-    acogedor NUMERIC(10) NULL,           -- Cedula de acogedor
+    hijo_de NUMERIC(5),
+    refugio NUMERIC(4),
+    acogedor NUMERIC(10),
     veterinario NUMERIC(10) NOT NULL,
 
     FOREIGN KEY (hijo_de) REFERENCES Mascota(codigo),
@@ -69,17 +66,21 @@ CREATE TABLE Mascota (
 );
 
 CREATE TABLE Perro (
-    codigo_mascota NUMERIC(5) PRIMARY KEY,
-    cantidad_comida NUMERIC(4) NOT NULL
+    codigo_mascota NUMERIC(5) PRIMARY KEY CHECK(codigo_mascota > 0),
+    cantidad_comida NUMERIC(4) NOT NULL,
+    
+    FOREIGN KEY (codigo_mascota) REFERENCES Mascota(codigo)
 );
 
 CREATE TABLE Gato (
-    codigo_mascota NUMERIC(5) PRIMARY KEY,
-    fertilidad BOOLEAN NOT NULL
+    codigo_mascota NUMERIC(5) PRIMARY KEY CHECK(codigo_mascota > 0),
+    fertilidad BOOLEAN NOT NULL,
+
+    FOREIGN KEY (codigo_mascota) REFERENCES Mascota(codigo)
 );
 
 CREATE TABLE Revision (
-  codigo NUMERIC(7) PRIMARY KEY,
+  codigo NUMERIC(7) PRIMARY KEY CHECK(codigo > 0),
   fecha DATE NOT NULL,
   comentarios TEXT NOT NULL,
   veterinario NUMERIC(10) NOT NULL,      -- Cedula del veterinario
@@ -90,18 +91,16 @@ CREATE TABLE Revision (
 );
 
 CREATE TABLE Estado_Salud (
+    codigo_mascota NUMERIC(5) PRIMARY KEY CHECK(codigo_mascota > 0),    -- CP / también CF hacia Mascota
     fecha DATE NOT NULL,
     diagnostico VARCHAR(200) NOT NULL,
-    codigo_mascota NUMERIC(5) PRIMARY KEY,    -- CP / también CF hacia Mascota
-    tipo VARCHAR(6),
 
     FOREIGN KEY (codigo_mascota) REFERENCES Mascota(codigo)
 );
 
 CREATE TABLE Optimo_Para_Adopcion (
-    codigo_mascota NUMERIC(5) PRIMARY KEY,
+    codigo_mascota NUMERIC(5) PRIMARY KEY CHECK(codigo_mascota > 0),
     observaciones TEXT NOT NULL,
-    tipo VARCHAR(6) DEFAULT 'Optimo' CHECK (tipo = 'Optimo'),
 
     FOREIGN KEY (codigo_mascota) REFERENCES Estado_Salud(codigo_mascota)
 );
@@ -111,7 +110,7 @@ CREATE TABLE Optimo_Para_Adopcion (
 CREATE TABLE Solicitud_Adopcion (
     codigo VARCHAR(20) PRIMARY KEY,
     fecha DATE NOT NULL,
-    motivo VARCHAR(200) NULL,
+    motivo VARCHAR(200),
     codigo_mascota NUMERIC(5) NOT NULL,
     cedula_adoptante NUMERIC(10),
     tipo VARCHAR(30) NOT NULL CHECK(tipo IN ("Aprobada", "Rechazada")),  -- Aprobada / Rechazada / Pendiente
@@ -123,7 +122,6 @@ CREATE TABLE Solicitud_Adopcion (
 CREATE TABLE Aprobada (
     codigo_solicitud VARCHAR(20) PRIMARY KEY,
     recomendaciones TEXT NOT NULL,
-    tipo VARCHAR(30) DEFAULT 'Aprobada' CHECK (tipo = 'Aprobada'),
 
     FOREIGN KEY (codigo_solicitud) REFERENCES Solicitud_Adopcion(codigo)
 );
@@ -131,7 +129,6 @@ CREATE TABLE Aprobada (
 CREATE TABLE Rechazada (
     codigo_solicitud VARCHAR(20) PRIMARY KEY,
     motivo TEXT NOT NULL,
-    tipo VARCHAR(30) DEFAULT 'Rechazada' CHECK (tipo = 'Rechazada'),
 
     FOREIGN KEY (codigo_solicitud) REFERENCES Solicitud_Adopcion(codigo)
 );
@@ -159,13 +156,14 @@ CREATE TABLE Devolucion (
 -- Caso Especial: Creación de Inyección Antiparasitaria
 
 CREATE TABLE Inyeccion_Antiparasitaria (
-    fecha_real DATE NOT NULL,
     fecha_estimada DATE NOT NULL,
+    fecha_real DATE NOT NULL,
     resultado VARCHAR(100) NOT NULL,
-    codigo_mascota NUMERIC(5) NOT NULL,
-    veterinario NUMERIC(10) NOT NULL,
+    codigo_mascota NUMERIC(5) NOT NULL CHECK(codigo_mascota > 0),
+    veterinario NUMERIC(10) NOT NULL CHECK(veterinario > 0),
 
     FOREIGN KEY (codigo_mascota) REFERENCES Mascota(codigo),
     FOREIGN KEY (veterinario) REFERENCES Veterinario(cedula_ciudadania),
-    PRIMARY KEY (fecha_real, codigo_mascota)
+    PRIMARY KEY (fecha_real, codigo_mascota),
+    CHECK(fecha_estimada >= fecha_real)
 );

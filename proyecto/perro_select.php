@@ -4,9 +4,9 @@
 require('../config/conexion.php');
 
 // Query SQL a la BD
-$query = "SELECT * FROM mascota";
+$query = "SELECT * FROM mascota WHERE tipo = 'Perro'";
 
 // Ejecutar la consulta
-$resultadoEmpresa = mysqli_query($conn, $query) or die(mysqli_error($conn));
+$resultadoMascota = mysqli_query($conn, $query) or die(mysqli_error($conn));
 
 mysqli_close($conn);

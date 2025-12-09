@@ -3,21 +3,20 @@ include "../includes/header.php";
 ?>
 
 <!-- TÍTULO. Cambiarlo, pero dejar especificada la analogía -->
-<h1 class="mt-3 fw-bold">Consulta 2</h1>
+<h1 class="mt-3 fw-bold">Consulta 3</h1>
 
 <p class="mt-3 fw-bold">Caso general:</p>
 <p class="mt-3">
-    El segundo botón debe mostrar todos los datos de la vaca que tiene mayor
-    valor en promedio litros día y que nunca ha sido inseminada artificialmente (en
-    caso de empates, usted decide como proceder).
+    El tercer botón debe mostrar todos los datos del cerdo de mayor valor que
+    está listo para la venta junto con los datos de su cuidador (empleado; en caso de
+    empates, usted decide como proceder).
 </p>
 
 <p class="mt-3 fw-bold">Caso particular:</p>
 <p class="mt-3">
-    Mostrar todos los datos del Perro que consume mayor cantidad de comida diariamente
-    y que nunca ha recibido una inyección antiparasitaria; en caso de que haya mas de uno,
-    se verá en pantalla el que tenga mayor código asignado en el sistema.
-</p>
+    Mostrar todos los datos del gato de mayor edad que aun conserva su fertilidad,
+    junto con los datos del veterinario encargado de sus revisiones médicas; en caso 
+    de que haya más de uno, se verá en pantalla el gato que tenga el nombre mas corto
 
 <?php
 // Crear conexión con la BD

@@ -7,12 +7,14 @@ require('../config/conexion.php');
 $cedulaEliminar = $_POST["cedulaEliminar"];
 
 // Query SQL a la BD
-$query = "DELETE FROM cliente WHERE cedula = '$cedulaEliminar'";
+$query1 = "DELETE FROM `veterinario` WHERE cedula_ciudadania = $cedulaEliminar;";
+$query2 = "DELETE FROM `usuario` WHERE cedula_ciudadania = $cedulaEliminar;";
 
 // Ejecutar consulta
-$result = mysqli_query($conn, $query) or die(mysqli_error($conn));
+$result1 = mysqli_query($conn, $query1) or die(mysqli_error($conn));
+$result2 = mysqli_query($conn, $query2) or die(mysqli_error($conn));
 
-if($result): 
+if($result1&&$result2): 
     // Si fue exitosa, redirigirse de nuevo a la página de la entidad
     header ("Location: cliente.php");
 else:

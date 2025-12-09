@@ -7,20 +7,16 @@ include "../includes/header.php";
 
 <p class="mt-3 fw-bold">Caso general:</p>
 <p class="mt-3">
-    Sea sumavalor la suma de los valores de todos los proyectos asociados con un cliente.
-    El primer botón debe mostrar la cédula y el nombre de cada uno de los clientes 
-    que cumple todas las siguientes condiciones: es gerente, tiene sumavalor > 1000,
-    ha revisado al menos 3 proyectos y la empresa que gerencia no ha revisado ni un
-    solo proyecto.
+    Mostrar todos los datos del empleado(a) que más inseminaciones ha hecho a
+    vacas que él/ella no cuida (en caso de empates, usted decide como proceder).
 </p>
 
 <p class="mt-3 fw-bold">Caso particular:</p>
 <p class="mt-3">
-    Sea sumavalor la suma de los valores de todos los proyectos asociados con un cliente.
-    El primer botón debe mostrar la cédula y el nombre de cada uno de los clientes 
-    que cumple todas las siguientes condiciones: es gerente, tiene sumavalor > 1000,
-    ha revisado al menos 3 proyectos y la empresa que gerencia no ha revisado ni un
-    solo proyecto.
+    Mostrar todos los datos del veterinario/a que mas inyecciones antiparasitarias
+    ha realizado a perros que no fueron asignados a él/ella para revisiones médicas
+    periódicas; en caso de que haya más de uno, se verá en pantalla el que tenga menor 
+    cedula de cedula ciudadania.
 </p>
 
 <?php
@@ -28,17 +24,51 @@ include "../includes/header.php";
 require('../config/conexion.php');
 
 // Query SQL a la BD -> Crearla acá (No está completada, cambiarla a su contexto y a su analogía)
-$query = "SELECT cedula, nombre FROM cliente";
+$query = "SELECT I.veterinario, COUNT(*) AS InyecVal
+            FROM inyeccion_antiparasitaria I JOIN mascota M ON I.codigo_mascota = M.codigo
+            WHERE I.veterinario <> M.veterinario
+            GROUP BY I.veterinario
+            HAVING COUNT(*) = (     SELECT MAX(InyecVal)
+                                    FROM  ( SELECT COUNT(*) AS InyecVal
+                                            FROM inyeccion_antiparasitaria I2 JOIN mascota M2 ON I2.codigo_mascota = M2.codigo
+                                            WHERE I2.veterinario <> M2.veterinario
+                                            GROUP BY I2.veterinario	) AS ConteoVal  
+                                )";
 
 // Ejecutar la consulta
 $resultadoC1 = mysqli_query($conn, $query) or die(mysqli_error($conn));
+
+$veterinarioMenor = null;
+if($resultadoC1&& $resultadoC1->num_rows > 1):
+    $vets = [];
+
+    while ($fila = mysqli_fetch_assoc($resultadoC1)) {
+        $vets[] = $fila["veterinario"];
+    }
+    sort($vets);
+    $veterinarioMenor = $vets[0];
+
+elseif($resultadoC1 && $resultadoC1->num_rows == 1):
+    $fila = mysqli_fetch_assoc($resultadoC1);
+    $veterinarioMenor = $fila['veterinario'];
+
+endif;
+
+if($veterinarioMenor != null):
+    $queryFinal = "SELECT U.cedula_ciudadania, nombre, apellido, telefono, correo, V.especializacion
+                    FROM usuario U, veterinario V
+                    WHERE U.cedula_ciudadania = V.cedula_ciudadania AND U.cedula_ciudadania = '$veterinarioMenor'";
+    $resultadoFinal = mysqli_query($conn, $queryFinal) or die(mysqli_error($conn));
+else:
+    $resultadoFinal = null;
+endif;
 
 mysqli_close($conn);
 ?>
 
 <?php
 // Verificar si llegan datos
-if($resultadoC1 and $resultadoC1->num_rows > 0):
+if($resultadoFinal and $resultadoFinal->num_rows > 0):
 ?>
 
 <!-- MOSTRAR LA TABLA. Cambiar las cabeceras -->
@@ -51,6 +81,10 @@ if($resultadoC1 and $resultadoC1->num_rows > 0):
             <tr>
                 <th scope="col" class="text-center">Cédula</th>
                 <th scope="col" class="text-center">Nombre</th>
+                <th scope="col" class="text-center">Apellido</th>
+                <th scope="col" class="text-center">Teléfono</th>
+                <th scope="col" class="text-center">Correo</th>
+                <th scope="col" class="text-center">Especialización</th>
             </tr>
         </thead>
 
@@ -58,14 +92,18 @@ if($resultadoC1 and $resultadoC1->num_rows > 0):
 
             <?php
             // Iterar sobre los registros que llegaron
-            foreach ($resultadoC1 as $fila):
+            foreach ($resultadoFinal as $fila):
             ?>
 
             <!-- Fila que se generará -->
             <tr>
                 <!-- Cada una de las columnas, con su valor correspondiente -->
-                <td class="text-center"><?= $fila["cedula"]; ?></td>
+                <td class="text-center"><?= $fila["cedula_ciudadania"]; ?></td>
                 <td class="text-center"><?= $fila["nombre"]; ?></td>
+                <td class="text-center"><?= $fila["apellido"]; ?></td>
+                <td class="text-center"><?= $fila["telefono"]; ?></td>
+                <td class="text-center"><?= $fila["correo"]; ?></td>
+                <td class="text-center"><?= $fila["especializacion"]; ?></td>
             </tr>
 
             <?php
@@ -84,7 +122,7 @@ else:
 ?>
 
 <div class="alert alert-danger text-center mt-5">
-    No se encontraron resultados para esta consulta
+    NO HAY REGISTRO DE VETERINARIOS QUE HAYAN REALIZADO INYECCIONES A PERROS QUE NO LE HAN SIDO ASIGNADOS
 </div>
 
 <?php
