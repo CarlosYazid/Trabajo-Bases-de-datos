@@ -78,64 +78,6 @@ include "../includes/header.php";
             <label for="descripcion" class="form-label">Descripción</label>
             <input type="text" class="form-control" id="descripcion" name="descripcion" required>
         </div>
-
-        <div class="mb-3">
-            <label for="acogedor" class="form-label">Acogedor</label>
-            <select name="acogedor" id="acogedor" class="form-select" required>
-                
-                <!-- Option por defecto -->
-                <option value="ninguno">Ninguno</option>
-
-                <?php
-                // Importar el código del otro archivo
-                require("acogedor_select.php");
-                
-                // Verificar si llegan datos
-                if($resultadoAcogedor):
-                    
-                    // Iterar sobre los registros que llegaron
-                    foreach ($resultadoAcogedor as $fila):
-                ?>
-
-                <!-- Opción que se genera -->
-                <option value="<?= $fila["cedula_ciudadania"]; ?>"><?= $fila["nombre"];?> <?= $fila["apellido"];?> - C.C. <?= $fila["cedula_ciudadania"]; ?></option>
-
-                <?php
-                        // Cerrar los estructuras de control
-                    endforeach;
-                endif;
-                ?>
-            </select>
-        </div>
-
-        <div class="mb-3">
-            <label for="hijode" class="form-label">Hijo de</label>
-            <select name="hijode" id="hijode" class="form-select">
-                
-                <!-- Option por defecto -->
-                <option value="ninguno">Ninguno</option>
-
-                <?php
-                // Importar el código del otro archivo
-                require("select_mascota.php");
-                
-                // Verificar si llegan datos
-                if($resultadoMascota):
-                    
-                    // Iterar sobre los registros que llegaron
-                    foreach ($resultadoMascota as $fila):
-                ?>
-
-                <!-- Opción que se genera -->
-                <option value="<?= $fila["codigo"]; ?>"><?= $fila["nombre"];?> <?= $fila["tipo"];?> - Código: <?= $fila["codigo"]; ?></option>
-
-                <?php
-                        // Cerrar los estructuras de control
-                    endforeach;
-                endif;
-                ?>
-            </select>
-        </div>
         
         <!-- Consultar la lista de clientes y desplegarlos -->
         <div class="mb-3">
@@ -158,35 +100,6 @@ include "../includes/header.php";
 
                 <!-- Opción que se genera -->
                 <option value="<?= $fila["cedula_ciudadania"]; ?>"><?= $fila["nombre"];?> <?= $fila["apellido"];?> - C.C. <?= $fila["cedula_ciudadania"]; ?></option>
-
-                <?php
-                        // Cerrar los estructuras de control
-                    endforeach;
-                endif;
-                ?>
-            </select>
-        </div>
-        
-        <div class="mb-3">
-            <label for="refugio" class="form-label">Refugio</label>
-            <select name="refugio" id="refugio" class="form-select">
-                
-                <!-- Option por defecto -->
-                <option value="ninguno">Ninguno</option>
-
-                <?php
-                // Importar el código del otro archivo
-                require("refugio_select.php");
-                
-                // Verificar si llegan datos
-                if($resultadoRefugio):
-                    
-                    // Iterar sobre los registros que llegaron
-                    foreach ($resultadoRefugio as $fila):
-                ?>
-
-                <!-- Opción que se genera -->
-                <option value="<?= $fila["codigo"]; ?>"><?= $fila["nombre"];?> <?= $fila["ciudad"];?> - Código: <?= $fila["codigo"]; ?></option>
 
                 <?php
                         // Cerrar los estructuras de control
