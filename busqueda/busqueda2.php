@@ -79,7 +79,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'):
                 <th scope="col" class="text-center">Apellido</th>
                 <th scope="col" class="text-center">Telefono</th>
                 <th scope="col" class="text-center">Correo</th>
-                <th scope="col" class="text-center">Apellido</th>
                 <th scope="col" class="text-center">Codigo Mascota</th>
                 <th scope="col" class="text-center">Nombre Mascota</th>
                 <th scope="col" class="text-center">Tipo</th>
@@ -112,6 +111,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'):
                 <td class="text-center"><?= $fila["nombre_mascota"]; ?></td>
                 <td class="text-center"><?= $fila["tipo"]; ?></td>
                 <td class="text-center"><?= $fila["edad_mascota"]; ?></td>
+                <td class="text-center"><?= $fila["sexo_mascota"]; ?></td>
                 <td class="text-center"><?= $fila["descripcion"]; ?></td>
                 <td class="text-center"><?= $fila["hijo_de"]; ?></td>
                 <td class="text-center"><?= $fila["refugio"]; ?></td>
